@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IITP Monopoly</title>
+    <title>Monopoly Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -303,7 +303,8 @@
         function gameOver(player) {
             const playerName = player === 1 ? player1Name : player2Name;
             addMessage(`${playerName} has lost the game!`);
-            // Reset the game or take other actions to end the game
+            alert(`${playerName} has lost the game!`);
+            location.reload();
         }
 
         function addMessage(message) {
