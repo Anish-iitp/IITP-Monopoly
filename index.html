@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,140 +9,244 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: black;
         }
+
         .board {
             width: 600px;
             height: 600px;
             display: flex;
             flex-wrap: wrap;
             margin: 20px auto;
-            border: 2px solid #000;
+            background: rgb(0, 0, 0);
+            border: 2px solid #ffffff;
         }
+
         .cell {
             width: calc(100% / 7);
             height: calc(100% / 7);
             box-sizing: border-box;
             border: 1px solid #000;
             position: relative;
+            display: flex;
+            background-color: aqua;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
         }
+
         .corner {
-            background-color: #eee;
+            background-color: #2ed33f;
         }
+
         .property {
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #fff;
+            background-color: #212121;
+            color: #fff;
         }
+
         .player {
             width: 20px;
             height: 20px;
             border-radius: 50%;
             position: absolute;
         }
+
         .player1 {
-            background-color: red;
+            background-color: rgba(255, 0, 0, 0.5);
         }
+
         .player2 {
-            background-color: blue;
+            background-color: rgba(0, 0, 255, 0.5);
         }
+
         .controls {
             margin: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
         }
+
         #sell-options {
             display: none;
         }
+
         #messages {
             margin: 20px;
             height: 600px;
+            width: 400px;
             overflow-y: auto;
             border: 1px solid #000;
             padding: 10px;
-            background-color: #f9f9f9;
-            text-align: left;
+            background-color: #363535;
+            color: #fff;
+            text-align: center;
         }
+
         .container {
             display: flex;
             justify-content: center;
         }
+
+        .startBTN {
+            background: linear-gradient(to right, #fe3e1c, #1130f8);
+            color: white;
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        #player1-name {
+            background-color: rgba(255, 55, 0, 0.641);
+            color: #000;
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        #player2-name {
+            background-color: rgba(0, 128, 255, 0.627);
+            color: #000;
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        .propertyDetails {
+            margin: 20px;
+            width: 400px;
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ffffff;
+            padding: 10px;
+            background-color: #333333;
+            text-align: center;
+        }
+
+        .useless {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #property-details p {
+            margin: 5px;
+            color: rgb(255, 255, 255);
+        }
+
+        #property-details img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
+
 <body>
     <h1>Monopoly Game</h1>
     <div>
-        <label for="player1-name">Player 1 Name:</label>
-        <input type="text" id="player1-name" placeholder="Enter Player 1 Name">
-        <label for="player2-name">Player 2 Name:</label>
-        <input type="text" id="player2-name" placeholder="Enter Player 2 Name">
-        <button onclick="startGame()">Start Game</button>
+        <label for="player1-name" style="color: rgb(255, 55, 0);">Player 1 Name:</label>
+        <input type="text" id="player1-name">
+        <label for="player2-name" style="color: rgb(0, 128, 255);">Player 2 Name:</label>
+        <input type="text" id="player2-name">
+        <button onclick="startGame()" class="startBTN">Start Game</button>
     </div>
     <div class="container">
         <div class="board" id="board"></div>
+        <div class="useless">
+            <div class="propertyDetails">
+                <h2 style="color: white;">Property Details</h2>
+                <div id="property-details">
+                    <img src="./IMG_20231116_181429[1].jpg" alt="Property Image" class="property-current-image">
+                    <p class="property-current-price"></p>
+                    <p class="property-current-selling-price"></p>
+                    <p class="property-current-rent"></p>
+                    <p class="property-current-owner"></p>
+                </div>
+                
+            </div>
+            <div class="controls">
+                <button onclick="rollDice()">Roll Dice</button>
+                <div>
+                    <p>Dice Result: <span id="dice-result">0</span></p>
+                </div>
+                <div class="playerss">
+                    <p>Player 1 Money: <span id="player1-money">$1000</span></p>
+                    <p>Player 2 Money: <span id="player2-money">$1000</span></p>
+                </div>
+                <div id="sell-options">
+                    <select id="property-select"></select>
+                    <button onclick="sellProperty()">Sell Property</button>
+                </div>
+            </div>
+        </div>
+        
         <div id="messages">
             <h2>Game Events</h2>
             <div id="events"></div>
         </div>
     </div>
-    <div class="controls">
-        <button onclick="rollDice()">Roll Dice</button>
-        <div>
-            <p>Dice Result: <span id="dice-result">0</span></p>
-        </div>
-        <div>
-            <p>Player 1 Money: <span id="player1-money">$1000</span></p>
-            <p>Player 2 Money: <span id="player2-money">$1000</span></p>
-        </div>
-        <div id="sell-options">
-            <select id="property-select"></select>
-            <button onclick="sellProperty()">Sell Property</button>
-        </div>
-    </div>
-    <div id="messages">
-        <h2>Game Events</h2>
-        <div id="events"></div>
-    </div>
+    
+    
     <script>
         let player1Name = "Player 1";
         let player2Name = "Player 2";
 
         const boardElement = document.getElementById('board');
-        const player1 = {element: createPlayerElement('player1'), money: 1000, position: 0, properties: [], inJail: 0};
-        const player2 = {element: createPlayerElement('player2'), money: 1000, position: 0, properties: [], inJail: 0};
+        const player1 = { element: createPlayerElement('player1'), money: 1000, position: 0, properties: [], inJail: 0 };
+        const player2 = { element: createPlayerElement('player2'), money: 1000, position: 0, properties: [], inJail: 0 };
+
         let currentPlayer = 1;
 
         const properties = [
-            {name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0},
-            {name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70},
-            {name: 'Ghext Cafe', price: 180, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70},
-            {name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80},
-            {name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0},
-            {name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80},
-            {name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80},
-            {name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0},
-            {name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100},
-            {name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100},
-            {name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120},
-            {name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0},
-            {name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120},
-            {name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120},
-            {name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0},
-            {name: 'Central Lib', price: 450, rent: 50, owner: null, upgradeLevel: 0, upgradeCost: 180},
-            {name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170},
-            {name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170},
-            {name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140},
-            {name: 'Tutorial Block', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140},
-            {name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100},
-            {name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100},
-            {name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120},
-            {name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0},
-            {name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120},
-            {name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120},
-            {name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40},
-            {name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50},
-            {name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60},
-            {name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60},
-            {name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40},
-            {name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0}
+            { name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
+            { name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70 },
+            { name: 'Ghext Cafe', price: 180, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70 },
+            { name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80 },
+            { name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
+            { name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80 },
+            { name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80 },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
+            { name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
+            { name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
+            { name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
+            { name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
+            { name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
+            { name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
+            { name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
+            { name: 'Central Lib', price: 450, rent: 50, owner: null, upgradeLevel: 0, upgradeCost: 180 },
+            { name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170 },
+            { name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170 },
+            { name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140 },
+            { name: 'Tutorial Block', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140 },
+            { name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
+            { name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
+            { name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
+            { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
+            { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
+            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40 },
+            { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50 },
+            { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60 },
+            { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60 },
+            { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40 },
+            { name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 }
         ];
 
         function createPlayerElement(playerClass) {
@@ -285,6 +390,7 @@
                 updatePropertyOwnership();
                 populateSellOptions();
             }
+
         }
 
         function updatePropertyOwnership() {
@@ -314,6 +420,33 @@
             events.appendChild(eventMessage);
             events.scrollTop = events.scrollHeight;
         }
+        //a function that displays the property details according to mouse hovering on cells and constantly update the elements
+        function displayPropertyDetails() {
+            const propertyDetails = document.getElementById('property-details');
+            const propertyCurrentImage = propertyDetails.querySelector('.property-current-image');
+            const propertyCurrentPrice = propertyDetails.querySelector('.property-current-price');
+            const propertyCurrentSellingPrice = propertyDetails.querySelector('.property-current-selling-price');
+            const propertyCurrentRent = propertyDetails.querySelector('.property-current-rent');
+            const propertyCurrentOwner = propertyDetails.querySelector('.property-current-owner');
+
+            boardElement.addEventListener('mouseover', (event) => {
+                const cell = event.target.closest('.cell');
+                if (cell) {
+                    const index = Array.from(cell.parentNode.children).indexOf(cell);
+                    const property = properties[index];
+                    if (property) {
+                        propertyCurrentImage.src = `./IMG_20231116_181429[1].jpg`;
+                        propertyCurrentPrice.innerText = `Price: $${property.price}`;
+                        propertyCurrentSellingPrice.innerText = `Selling Price: $${property.price + (property.upgradeLevel * property.upgradeCost * 0.5)}`;
+                        propertyCurrentRent.innerText = `Rent: $${property.rent + (property.upgradeLevel * property.rent)}`;
+                        propertyCurrentOwner.innerText = `Owner: ${property.owner ? (property.owner === 1 ? player1Name : player2Name) : 'None'}`;
+                    }
+                }
+            });
+        }
+        //this function should be added to following functions to take effect in a real time
+        displayPropertyDetails();
     </script>
 </body>
+
 </html>
