@@ -24,15 +24,17 @@
             width: fit-content;
 
             h1 {
-                /*make linear gradient coloured test*/
                 background: linear-gradient(to right, #ff2424, #304bf9);
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
+                font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
             }
 
             h4 {
                 color: white;
+                margin-top: -10px;
+                font-size: large;
             }
         }
 
@@ -44,37 +46,52 @@
             margin: 20px;
             background: rgb(0, 0, 0);
             border: 2px solid #ffffff;
+            padding: auto;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ffffff;
+
         }
 
         .cell {
             width: calc(100% / 7);
             height: calc(100% / 7);
+            margin: 6px;
             box-sizing: border-box;
-            border: 1px solid #000;
+            border: 3px solid #848484;
             position: relative;
             display: flex;
             background-color: aqua;
+            border-radius: 10px;
             align-items: center;
             justify-content: center;
             text-align: center;
             font-size: small;
+            font-weight: bold;
+            box-shadow: 0 0 10px #ffffff;
+            box-shadow: inset 0 0 5px #8b8b8b;
             font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         }
 
         .corner {
-            background-color: #2ed33f;
+            background-color: #076811;
+            box-shadow: 0 0 10px #2ed33f;
+            color: #ffffff;
         }
 
         .discocell {
             background-color: #000000;
             color: red;
             font-size: larger;
-
+            border-radius: 0px;
         }
 
         .startcell {
             background-color: #00e5ff;
             font-size: larger;
+            border-radius: 20px;
+            box-shadow: 0 0 10px #00e5ff;
         }
 
         .property {
@@ -95,11 +112,15 @@
         .player1 {
             background-color: rgba(255, 0, 0, 0.5);
             transition: all 0.5s ease-in-out;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 3px #ffffff;
         }
 
         .player2 {
             background-color: rgba(0, 0, 255, 0.5);
             transition: all 0.5s ease-in-out;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 3px #ffffff;
         }
 
         .controls {
@@ -122,11 +143,19 @@
             overflow-y: auto;
             border: 1px solid #000;
             padding: 10px;
-            background-color: #363535;
+            background-color: #36353500;
             color: #fff;
             text-align: center;
-            /*do auto scroll*/
             scrollbar-color: #ffffff #363535;
+            box-shadow: 0 0 10px #ffffff;
+            scroll-behavior: smooth;
+            h2 {
+                margin-top: auto;
+                text-align: center;
+                margin: auto;
+                position: sticky;
+                top: 0;
+            }
         }
 
         .container {
@@ -140,10 +169,11 @@
             font-size: large;
             font-weight: bold;
             padding: 5px 10px;
-            border: none;
+            border: 1px solid #ffffff;
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
+            box-shadow: 0 0 10px #ffffff;
         }
 
         #player1-name {
@@ -151,7 +181,7 @@
             color: #ffffff;
             font-size: large;
             padding: 5px 10px;
-            border: none;
+            border: 1px solid #ffffff;
             border-radius: 5px;
             margin: 10px;
         }
@@ -161,7 +191,7 @@
             color: #ffffff;
             font-size: large;
             padding: 5px 10px;
-            border: none;
+            border: 1px solid #ffffff;
             border-radius: 5px;
             margin: 10px;
         }
@@ -171,11 +201,13 @@
             width: 400px;
             height: 400px;
             overflow-y: auto;
-            border: 1px solid #ffffff;
             padding: 10px;
             padding-top: -5px;
-            background-color: #333333;
             text-align: center;
+            background: linear-gradient(to bottom, #000000, #292929);
+            img {
+                box-shadow: 0 0 5px #ffffff;
+            }
         }
 
         .useless {
@@ -252,7 +284,7 @@
         <div class="board" id="board"></div>
         <div class="useless">
             <div class="propertyDetails">
-                <h2 style="color: white; margin-top: auto;">Property Details</h2>
+                <h2 style="color: white; margin-top: auto;"><u>Property Details</u></h2>
                 <div id="property-details">
                     <img src="./Intro.jpg" alt="Property Image" class="property-current-image">
                     <p class="property-current-price"></p>
@@ -276,13 +308,15 @@
                     <button onclick="sellProperty()" class="sellBtn">Sell Property</button>
                 </div>
                 <div class="playerss">
-                    <p>Player 1 Money: <span id="player1-money">$1000</span></p>
-                    <p>Player 2 Money: <span id="player2-money">$1000</span></p>
+                    <p>Player 1 Money: <span id="player1-money">$1500</span></p>
+                    <p>Player 2 Money: <span id="player2-money">$1500</span></p>
                 </div>
             </div>
         </div>
-        <div id="messages">
-            <h2 style="margin-top: auto;">Game Events</h2>
+        <div id="messages" class="messages">
+            <div class="bekaar">
+                <h2 style="margin-top: auto;"><u>Game Events</u></h2>
+            </div>
             <div id="events"></div>
         </div>
     </div>
@@ -293,8 +327,8 @@
         let player2Name = "Player 2";
 
         const boardElement = document.getElementById('board');
-        const player1 = { element: createPlayerElement('player1'), money: 1000, position: 0, properties: [], inJail: 0 };
-        const player2 = { element: createPlayerElement('player2'), money: 1000, position: 0, properties: [], inJail: 0 };
+        const player1 = { element: createPlayerElement('player1'), money: 1500, position: 0, properties: [], inJail: 0 };
+        const player2 = { element: createPlayerElement('player2'), money: 1500, position: 0, properties: [], inJail: 0 };
 
         let currentPlayer = 1;
 
@@ -325,12 +359,12 @@
             { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'disco.jpg' },
             { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'no.jpg' },
             { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'gymkhana.jpg' },
-            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'no.jpg' },
+            { name: 'Bus Stand 4', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
             { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50, imgSrc: 'block6.jpg' },
             { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'block4.jpg' },
             { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'block3.jpg' },
             { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'asima.jpg' },
-            { name: 'Bus Stand 4', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' }
+            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'no.jpg' }
         ];
 
         function createPlayerElement(playerClass) {
@@ -366,11 +400,12 @@
                 if (index === player2.position) {
                     cell.appendChild(player2.element);
                 }
+                player1.element.style.left = '20%';
+                player2.element.style.right = '20%';
             });
         }
 
         function startGame() {
-            //disable start button
             document.querySelector('.startBTN').disabled = true;
             player1Name = document.getElementById('player1-name').value || "Player 1";
             player2Name = document.getElementById('player2-name').value || "Player 2";
@@ -401,13 +436,25 @@
 
         function movePlayer(steps) {
             const player = currentPlayer === 1 ? player1 : player2;
+            const otherplayer = currentPlayer === 1 ? player2 : player1;
             const playerName = currentPlayer === 1 ? player1Name : player2Name;
         
             player.position = (player.position + steps) % properties.length;
 
             const newPositionCell = document.querySelector(`.cell:nth-child(${player.position + 1})`);
             newPositionCell.appendChild(player.element);
-            //move player with animation
+            player.element.style.transform = 'scale(3)';
+            player.element.style.transition = 'transform 0.2s';
+            setTimeout(() => {
+                player.element.style.transform = 'scale(1)';
+                player.element.style.transition = 'transform 0.2s';
+            }, 100);
+            if (player.position === otherplayer.position) {
+                player.element.style.left = '20%';
+                otherplayer.element.style.right = '20%';
+            } else {
+                player.element.style.left = 'auto';
+            }
 
             handleProperty(player, properties[player.position]);
             currentPlayer = currentPlayer === 1 ? 2 : 1;
@@ -496,10 +543,13 @@
                 const cell = document.querySelector(`.cell:nth-child(${index + 1})`);
                 if (property.owner === 1) {
                     cell.style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
+                    cell.style.boxShadow = '0 0 10px rgba(255, 0, 0)';
                 } else if (property.owner === 2) {
                     cell.style.backgroundColor = 'rgba(0, 0, 255, 0.5)';
+                    cell.style.boxShadow = '0 0 10px rgba(0, 0, 255)';
                 } else {
                     cell.style.backgroundColor = '';
+                    cell.style.boxShadow = '';
                 }
             });
         }
@@ -517,8 +567,8 @@
             eventMessage.innerText = message;
             events.appendChild(eventMessage);
             events.scrollTop = events.scrollHeight;
+            document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
         }
-        //a function that displays the property details according to mouse hovering on cells and constantly update the elements
         function displayPropertyDetails() {
             const propertyDetails = document.getElementById('property-details');
             const propertyCurrentImage = propertyDetails.querySelector('.property-current-image');
@@ -532,6 +582,11 @@
             boardElement.addEventListener('mouseover', (event) => {
                 const cell = event.target.closest('.cell');
                 if (cell) {
+                    cell.style.transform = 'scale(1.1)';
+                    cell.style.transition = 'transform 0.3s';
+                }
+                
+                if (cell) {
                     const index = Array.from(cell.parentNode.children).indexOf(cell);
                     const property = properties[index];
                     if (property) {
@@ -544,6 +599,21 @@
                         propertyCurrentUpgradeCost.innerText = `Upgrade Cost: $${property.upgradeCost}`;
                     }
                 }
+            });
+            boardElement.addEventListener('mouseout', (event) => {
+                const cell = event.target.closest('.cell');
+                if (cell) {
+                    cell.style.transform = 'scale(1)';
+                    cell.style.transition = 'transform 0.3s';
+                }
+                propertyCurrentImage.src = './Intro.jpg';
+                propertyCurrentPrice.innerText = '';
+                propertyCurrentSellingPrice.innerText = '';
+                propertyCurrentRent.innerText = '';
+                propertyCurrentOwner.innerText = '';
+                propertyCurrentUpgradeLevel.innerText = '';
+                propertyCurrentUpgradeCost.innerText = '';
+
             });
         }
         displayPropertyDetails();
