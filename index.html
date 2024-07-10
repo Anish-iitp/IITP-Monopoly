@@ -10,6 +10,30 @@
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: black;
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding-left: 5px;
+            margin: 0;
+        }
+
+        .title {
+            height: auto;
+            width: fit-content;
+
+            h1 {
+                /*make linear gradient coloured test*/
+                background: linear-gradient(to right, #ff2424, #304bf9);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            h4 {
+                color: white;
+            }
         }
 
         .board {
@@ -17,7 +41,7 @@
             height: 600px;
             display: flex;
             flex-wrap: wrap;
-            margin: 20px auto;
+            margin: 20px;
             background: rgb(0, 0, 0);
             border: 2px solid #ffffff;
         }
@@ -33,6 +57,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
+            font-size: small;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         }
 
         .corner {
@@ -63,7 +89,7 @@
         }
 
         .controls {
-            margin: 20px;
+            margin: 10px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -78,7 +104,7 @@
         #messages {
             margin: 20px;
             height: 600px;
-            width: 400px;
+            width: 350px;
             overflow-y: auto;
             border: 1px solid #000;
             padding: 10px;
@@ -133,6 +159,7 @@
             overflow-y: auto;
             border: 1px solid #ffffff;
             padding: 10px;
+            padding-top: -5px;
             background-color: #333333;
             text-align: center;
         }
@@ -153,13 +180,67 @@
             width: 100%;
             height: 200px;
             object-fit: cover;
-            margin-bottom: 10px;
+        }
+
+        .rollBtn {
+            color: white;
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .rolling {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #property-select {
+            background-color: #333333;
+            color: white;
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            margin: 10px;
+        }
+
+        .sellBtn {
+            color: white;
+            font-size: large;
+            font-weight: bold;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        pop-up {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #333333;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 2;
         }
     </style>
 </head>
 
 <body>
-    <h1>Monopoly Game</h1>
+    <pop-up>I currently don't have enough images to show every place 🥲</pop-up>
+    <div class="title">
+        <h1>IITP Monopoly<h4>Let's sell it!</h4></h1>
+    </div>
     <div>
         <label for="player1-name" style="color: rgb(255, 55, 0);">Player 1 Name:</label>
         <input type="text" id="player1-name">
@@ -171,39 +252,42 @@
         <div class="board" id="board"></div>
         <div class="useless">
             <div class="propertyDetails">
-                <h2 style="color: white;">Property Details</h2>
+                <h2 style="color: white; margin-top: auto;">Property Details</h2>
                 <div id="property-details">
-                    <img src="./IMG_20231116_181429[1].jpg" alt="Property Image" class="property-current-image">
+                    <img src="./Intro.jpg" alt="Property Image" class="property-current-image">
                     <p class="property-current-price"></p>
                     <p class="property-current-selling-price"></p>
                     <p class="property-current-rent"></p>
                     <p class="property-current-owner"></p>
+                    <p class="property-current-upgrade-level"></p>
+                    <p class="property-current-upgrade-cost"></p>
                 </div>
-                
+
             </div>
             <div class="controls">
-                <button onclick="rollDice()">Roll Dice</button>
-                <div>
-                    <p>Dice Result: <span id="dice-result">0</span></p>
+                <div class="rolling">
+                    <button onclick="rollDice()" class="rollBtn" disabled="true">Roll Dice</button>
+                    <div>
+                        <p>Dice Result: <span id="dice-result">0</span></p>
+                    </div>
+                </div>
+                <div id="sell-options">
+                    <select id="property-select"></select>
+                    <button onclick="sellProperty()" class="sellBtn">Sell Property</button>
                 </div>
                 <div class="playerss">
                     <p>Player 1 Money: <span id="player1-money">$1000</span></p>
                     <p>Player 2 Money: <span id="player2-money">$1000</span></p>
                 </div>
-                <div id="sell-options">
-                    <select id="property-select"></select>
-                    <button onclick="sellProperty()">Sell Property</button>
-                </div>
             </div>
         </div>
-        
         <div id="messages">
-            <h2>Game Events</h2>
+            <h2 style="margin-top: auto;">Game Events</h2>
             <div id="events"></div>
         </div>
     </div>
-    
-    
+
+
     <script>
         let player1Name = "Player 1";
         let player2Name = "Player 2";
@@ -215,38 +299,38 @@
         let currentPlayer = 1;
 
         const properties = [
-            { name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
-            { name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70 },
-            { name: 'Ghext Cafe', price: 180, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70 },
-            { name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80 },
-            { name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
-            { name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80 },
-            { name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80 },
-            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
-            { name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
-            { name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
-            { name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
-            { name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
-            { name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
-            { name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
-            { name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
-            { name: 'Central Lib', price: 450, rent: 50, owner: null, upgradeLevel: 0, upgradeCost: 180 },
-            { name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170 },
-            { name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170 },
-            { name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140 },
-            { name: 'Tutorial Block', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140 },
-            { name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
-            { name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100 },
-            { name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
-            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 },
-            { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
-            { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120 },
-            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40 },
-            { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50 },
-            { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60 },
-            { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60 },
-            { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40 },
-            { name: 'Do Rest', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0 }
+            { name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Ghext Cafe', price: 180, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'GhextCafe.jpg' },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
+            { name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Bus Stand 2', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Bus Stand 3', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Central Lib', price: 450, rent: 50, owner: null, upgradeLevel: 0, upgradeCost: 180, imgSrc: 'CentralLib.jpg' },
+            { name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'GhextCafe.jpg' },
+            { name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Tutorial Block', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Bus Stand 4', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' }
         ];
 
         function createPlayerElement(playerClass) {
@@ -284,12 +368,21 @@
             player2Name = document.getElementById('player2-name').value || "Player 2";
             document.getElementById('player1-money').innerText = `$${player1.money}`;
             document.getElementById('player2-money').innerText = `$${player2.money}`;
+            document.querySelector('.rollBtn').style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
+            document.querySelector('.rollBtn').disabled = false;
+            /*show popup for 3 seconds with animation*/
+            document.querySelector('pop-up').style.display = 'block';
+            setTimeout(() => {
+                document.querySelector('pop-up').style.display = 'none';
+            }, 3000);
             setupBoard();
         }
 
         function rollDice() {
             const player = currentPlayer === 1 ? player1 : player2;
             const playerName = currentPlayer === 1 ? player1Name : player2Name;
+            document.querySelector('.rollBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 255, 0.5)';
+            document.querySelector('.sellBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 255, 0.5)';
 
             if (player.inJail > 0) {
                 player.inJail -= 1;
@@ -428,6 +521,8 @@
             const propertyCurrentSellingPrice = propertyDetails.querySelector('.property-current-selling-price');
             const propertyCurrentRent = propertyDetails.querySelector('.property-current-rent');
             const propertyCurrentOwner = propertyDetails.querySelector('.property-current-owner');
+            const propertyCurrentUpgradeLevel = propertyDetails.querySelector('.property-current-upgrade-level');
+            const propertyCurrentUpgradeCost = propertyDetails.querySelector('.property-current-upgrade-cost');
 
             boardElement.addEventListener('mouseover', (event) => {
                 const cell = event.target.closest('.cell');
@@ -435,16 +530,17 @@
                     const index = Array.from(cell.parentNode.children).indexOf(cell);
                     const property = properties[index];
                     if (property) {
-                        propertyCurrentImage.src = `./IMG_20231116_181429[1].jpg`;
+                        propertyCurrentImage.src = property.imgSrc;
                         propertyCurrentPrice.innerText = `Price: $${property.price}`;
                         propertyCurrentSellingPrice.innerText = `Selling Price: $${property.price + (property.upgradeLevel * property.upgradeCost * 0.5)}`;
                         propertyCurrentRent.innerText = `Rent: $${property.rent + (property.upgradeLevel * property.rent)}`;
                         propertyCurrentOwner.innerText = `Owner: ${property.owner ? (property.owner === 1 ? player1Name : player2Name) : 'None'}`;
+                        propertyCurrentUpgradeLevel.innerText = `Upgrade Level: ${property.upgradeLevel}`;
+                        propertyCurrentUpgradeCost.innerText = `Upgrade Cost: $${property.upgradeCost}`;
                     }
                 }
             });
         }
-        //this function should be added to following functions to take effect in a real time
         displayPropertyDetails();
     </script>
 </body>
