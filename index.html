@@ -112,14 +112,14 @@
         .player1 {
             background-color: rgba(255, 0, 0, 0.5);
             transition: all 0.5s ease-in-out;
-            border: 2px solid #ffffff;
+            border: 1px solid #ffffff;
             box-shadow: 0 0 3px #ffffff;
         }
 
         .player2 {
             background-color: rgba(0, 0, 255, 0.5);
             transition: all 0.5s ease-in-out;
-            border: 2px solid #ffffff;
+            border: 1px solid #ffffff;
             box-shadow: 0 0 3px #ffffff;
         }
 
@@ -454,7 +454,7 @@
                 otherplayer.element.style.right = '20%';
             } else {
                 player.element.style.left = 'auto';
-                otherplayer.element.style.left = 'auto';
+                otherplayer.element.style.right = 'auto';
             }
 
             handleProperty(player, properties[player.position]);
@@ -558,8 +558,9 @@
         function gameOver(player) {
             const playerName = player === 1 ? player1Name : player2Name;
             addMessage(`${playerName} has lost the game!`);
-            alert(`${playerName} has lost the game!`);
-            location.reload();
+            alert(`${playerName} has lost the game!\nRefresh the page to start a new game.`);
+            document.querySelector('.rollBtn').disabled = true;
+            document.querySelector('.sellBtn').disabled = true;
         }
 
         function addMessage(message) {
