@@ -65,6 +65,18 @@
             background-color: #2ed33f;
         }
 
+        .discocell {
+            background-color: #000000;
+            color: red;
+            font-size: larger;
+
+        }
+
+        .startcell {
+            background-color: #00e5ff;
+            font-size: larger;
+        }
+
         .property {
             display: flex;
             align-items: center;
@@ -82,10 +94,12 @@
 
         .player1 {
             background-color: rgba(255, 0, 0, 0.5);
+            transition: all 0.5s ease-in-out;
         }
 
         .player2 {
             background-color: rgba(0, 0, 255, 0.5);
+            transition: all 0.5s ease-in-out;
         }
 
         .controls {
@@ -111,6 +125,8 @@
             background-color: #363535;
             color: #fff;
             text-align: center;
+            /*do auto scroll*/
+            scrollbar-color: #ffffff #363535;
         }
 
         .container {
@@ -220,24 +236,10 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        pop-up {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #333333;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-            z-index: 2;
-        }
     </style>
 </head>
 
 <body>
-    <pop-up>I currently don't have enough images to show every place 🥲</pop-up>
     <div class="title">
         <h1>IITP Monopoly<h4>Let's sell it!</h4></h1>
     </div>
@@ -299,38 +301,38 @@
         let currentPlayer = 1;
 
         const properties = [
-            { name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'GhextCafe.jpg' },
+            { name: 'START', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'Intro.jpg' },
+            { name: 'Cycle Shop', price: 170, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'no.jpg' },
             { name: 'Ghext Cafe', price: 180, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 70, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'GhextCafe.jpg' },
-            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
-            { name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Bus Stand 2', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Bus Stand 3', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
+            { name: 'Tutorial Block', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'tut_block.jpg' },
+            { name: 'Bus Stand 1', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
+            { name: 'Admin Build.', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'admin_build.jpg' },
+            { name: 'Angeethi', price: 200, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 80, imgSrc: 'angeethi.jpg' },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'disco.jpg' },
+            { name: 'Nescafe Clh', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'nescafeclh.jpg' },
+            { name: 'Food Court', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'fc.jpg' },
+            { name: 'CV Raman', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'cvr.jpg' },
+            { name: 'Bus Stand 2', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
+            { name: 'Aryabhatta', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'aryabhatta.jpg' },
+            { name: 'Kalam', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'kalam.jpg' },
+            { name: 'Bus Stand 3', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' },
             { name: 'Central Lib', price: 450, rent: 50, owner: null, upgradeLevel: 0, upgradeCost: 180, imgSrc: 'CentralLib.jpg' },
-            { name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'GhextCafe.jpg' },
-            { name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Tutorial Block', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
-            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'GhextCafe.jpg' },
-            { name: 'Bus Stand 4', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'GhextCafe.jpg' }
+            { name: 'Director House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'iitpdirector.jpg' },
+            { name: 'Guest House', price: 420, rent: 45, owner: null, upgradeLevel: 0, upgradeCost: 170, imgSrc: 'guest.jpg' },
+            { name: 'CLH', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'clh.jpg' },
+            { name: 'Incubation Center', price: 350, rent: 40, owner: null, upgradeLevel: 0, upgradeCost: 140, imgSrc: 'incubation.jpg' },
+            { name: 'Nescafe 2', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'nescafe2.jpg' },
+            { name: 'Workshops', price: 250, rent: 30, owner: null, upgradeLevel: 0, upgradeCost: 100, imgSrc: 'workshop.jpg' },
+            { name: 'Sports Cmplx', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'sports.jpg' },
+            { name: 'DISCO', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'disco.jpg' },
+            { name: 'Banjara', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'no.jpg' },
+            { name: 'Gymkhana', price: 300, rent: 35, owner: null, upgradeLevel: 0, upgradeCost: 120, imgSrc: 'gymkhana.jpg' },
+            { name: 'Anti Alcohol', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'no.jpg' },
+            { name: 'Block 6', price: 130, rent: 20, owner: null, upgradeLevel: 0, upgradeCost: 50, imgSrc: 'block6.jpg' },
+            { name: 'Block 4', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'block4.jpg' },
+            { name: 'Block 3', price: 150, rent: 25, owner: null, upgradeLevel: 0, upgradeCost: 60, imgSrc: 'block3.jpg' },
+            { name: 'Asima', price: 100, rent: 15, owner: null, upgradeLevel: 0, upgradeCost: 40, imgSrc: 'asima.jpg' },
+            { name: 'Bus Stand 4', price: 0, rent: 0, owner: null, upgradeLevel: 0, upgradeCost: 0, imgSrc: 'bus.jpg' }
         ];
 
         function createPlayerElement(playerClass) {
@@ -346,6 +348,12 @@
                 if (property.price > 0) {
                     cell.classList.add('property');
                     cell.innerText = `${property.name}\n$${property.price}`;
+                } else if(property.name === 'DISCO'){
+                    cell.classList.add('discocell');
+                    cell.innerText = property.name;
+                } else if(property.name === 'START'){
+                    cell.classList.add('startcell');
+                    cell.innerText = property.name;
                 } else {
                     cell.classList.add('corner');
                     cell.innerText = property.name;
@@ -353,7 +361,7 @@
                 boardElement.appendChild(cell);
             });
 
-            document.querySelectorAll('.property, .corner').forEach((cell, index) => {
+            document.querySelectorAll('.property, .corner, .startcell, .discocell').forEach((cell, index) => {
                 if (index === player1.position) {
                     cell.appendChild(player1.element);
                 }
@@ -364,25 +372,22 @@
         }
 
         function startGame() {
+            //disable start button
+            document.querySelector('.startBTN').disabled = true;
             player1Name = document.getElementById('player1-name').value || "Player 1";
             player2Name = document.getElementById('player2-name').value || "Player 2";
             document.getElementById('player1-money').innerText = `$${player1.money}`;
             document.getElementById('player2-money').innerText = `$${player2.money}`;
             document.querySelector('.rollBtn').style.backgroundColor = 'rgba(255, 0, 0, 0.5)';
             document.querySelector('.rollBtn').disabled = false;
-            /*show popup for 3 seconds with animation*/
-            document.querySelector('pop-up').style.display = 'block';
-            setTimeout(() => {
-                document.querySelector('pop-up').style.display = 'none';
-            }, 3000);
             setupBoard();
         }
 
         function rollDice() {
             const player = currentPlayer === 1 ? player1 : player2;
             const playerName = currentPlayer === 1 ? player1Name : player2Name;
-            document.querySelector('.rollBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 255, 0.5)';
-            document.querySelector('.sellBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(255, 0, 0, 0.5)' : 'rgba(0, 0, 255, 0.5)';
+            document.querySelector('.rollBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(0, 0, 255, 0.5)' : 'rgba(255, 0, 0, 0.5)';
+            document.querySelector('.sellBtn').style.backgroundColor = currentPlayer === 1 ? 'rgba(0, 0, 255, 0.5)' : 'rgba(255, 0, 0, 0.5)';
 
             if (player.inJail > 0) {
                 player.inJail -= 1;
@@ -399,10 +404,12 @@
         function movePlayer(steps) {
             const player = currentPlayer === 1 ? player1 : player2;
             const playerName = currentPlayer === 1 ? player1Name : player2Name;
+        
             player.position = (player.position + steps) % properties.length;
 
             const newPositionCell = document.querySelector(`.cell:nth-child(${player.position + 1})`);
             newPositionCell.appendChild(player.element);
+            //move player with animation
 
             handleProperty(player, properties[player.position]);
             currentPlayer = currentPlayer === 1 ? 2 : 1;
@@ -420,7 +427,7 @@
                         property.owner = currentPlayer;
                         player.properties.push(property);
                         document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
-                        addMessage(`${property.name} has been bought for $${property.price}.`);
+                        addMessage(`${property.name} has been bought for $${property.price} by ${playerName}.`);
                         updatePropertyOwnership();
                     }
                 }
