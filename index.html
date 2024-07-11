@@ -325,6 +325,7 @@
     <script>
         let player1Name = "Player 1";
         let player2Name = "Player 2";
+        var count = 0;
 
         const boardElement = document.getElementById('board');
         const player1 = { element: createPlayerElement('player1'), money: 1500, position: 0, properties: [], inJail: 0 };
@@ -385,7 +386,7 @@
                     cell.innerText = property.name;
                 } else if(property.name === 'START'){
                     cell.classList.add('startcell');
-                    cell.innerText = property.name;
+                    cell.innerText = `${property.name}\n+300$`;
                 } else {
                     cell.classList.add('corner');
                     cell.innerText = property.name;
@@ -431,7 +432,14 @@
 
             const diceResult = Math.floor(Math.random() * 6) + 1;
             document.getElementById('dice-result').innerText = diceResult;
-            movePlayer(diceResult);
+            count = diceResult;
+            for (let i = 0; i < diceResult; i++) {
+                document.querySelector('.rollBtn').disabled = true;
+                setTimeout(() => {
+                    count -= 1;
+                    movePlayer(1);
+                }, i * 300);
+            }
         }
 
         function movePlayer(steps) {
@@ -456,10 +464,17 @@
                 player.element.style.left = 'auto';
                 otherplayer.element.style.right = 'auto';
             }
-
-            handleProperty(player, properties[player.position]);
-            currentPlayer = currentPlayer === 1 ? 2 : 1;
-            populateSellOptions();
+            if (player.position === 0) {
+                player.money += 300;
+                document.getElementById(`player${currentPlayer}-money`).innerText = `$${player.money}`;
+                addMessage(`${playerName} has passed START and received $300.`);
+            }
+            if (count === 0) {
+                handleProperty(player, properties[player.position]);
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                document.querySelector('.rollBtn').disabled = false;
+                populateSellOptions();
+            }
         }
 
         function handleProperty(player, property) {
